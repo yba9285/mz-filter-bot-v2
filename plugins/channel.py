@@ -82,7 +82,7 @@ async def send_movie_updates(bot, file_name, caption, file_id):
         btn = [[
             InlineKeyboardButton('📂 ɢᴇᴛ ғɪʟᴇ 📂', url=f'https://telegram.me/{temp.U_NAME}?start=getfile-{search_movie}')
         ],[
-            InlineKeyboardButton('♻️ ʜᴏᴡ ᴛᴏ ᴅᴏᴡɴʟᴏᴀᴅ ♻️', url=f'https://t.me/how_to_open_modijilink')
+            InlineKeyboardButton('♻️ ʜᴏᴡ ᴛᴏ ᴅᴏᴡɴʟᴏᴀᴅ ♻️', url=f'https://t.me/MzMoviiezOfficial')
         ]]
         reply_markup = InlineKeyboardMarkup(btn)
         if poster_url:
