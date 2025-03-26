@@ -8,7 +8,6 @@ import urllib.parse
 import logging
 import aiohttp
 
-
 async def render_page(id, secure_hash, src=None):
     file = await SilentX.get_messages(int(BIN_CHANNEL), int(id))
     file_data = await get_file_ids(SilentX, int(BIN_CHANNEL), int(id))
