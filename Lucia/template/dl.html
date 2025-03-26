@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SilentXBotz | {{file_name}}</title>
+    <link rel="stylesheet" href="https://unpkg.com/sheryjs/dist/Shery.css" />
+    <link rel="stylesheet" href="https://biisal.github.io/Resources/StreamCSS.css">
+    <link rel="stylesheet" href="https://biisal.github.io/Resources/playerCss.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+        integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <nav>
+        <div class="nleft">
+            <a href="https://t.me/SilentXBotz">
+                <h3 id="heading" style="z-index: 100;" class="magnet">SilentXBotz</h3>
+            </a>
+        </div>
+        <div class="nryt">
+            <a class="home-btn magnet" href="#main" onclick="toggleWidthnav(this)">Home</a>
+
+            <a href="#sec1" class="about-btn magnet" onclick="toggleWidthnav(this)">About</a>
+        </div>
+    </nav>
+    <center>
+        <div class="about-nav">            
+            <a href="#sec1" class="wlcm magnet" onclick="toggleWidth(this)">Welcome</a>
+            <a href="#sec2" class="abt-chnl magnet" onclick="toggleWidth(this)">Channels</a>
+            <a href="#sec3" class="magnet bot-btn" onclick="toggleWidth(this) , bot_btn_clicked()">Bots</a>
+            <a href="#sec4" class="magnet contact-btn" onclick="toggleWidth(this)">Let's Talk</a>
+        </div>
+    </center>
+    <div class="outer">
+        <div class="inner">
+            <div class="main" id="main">
+                <video id="player" class="player" src="{{file_url}}" type="video/mp4" playsinline controls
+                    width="100%"></video>
+                <div class="player"></div>
+                <div class="file-name">
+                    <h4>File Name : </h4>                  
+                    <p id="myDiv">{{file_name}}</p>
+                </div>
+                <div class="downloadBtn">
+                    <button class="magnet" onclick="vlc_player()"><img src="https://i.postimg.cc/15TQ4y7B/vlc.png"
+                            alt="">watch in VLC PLAYER</button>
+                    <button class="magnet" onclick="mx_player()"><img src="https://i.postimg.cc/sx4Msv4T/mx.png"
+                            alt="">watch in MX PLAYER</button>
+                    <button class="magnet" onclick="playit_player()"><img src="https://i.postimg.cc/RVGWYJFF/playit.png"
+                            alt="">watch in PLAYit
+                        PLAYER</button>
+                    <button class="magnet" onclick="km_player()"><img src="https://i.postimg.cc/wT9tFQ9Z/km.png"
+                            alt="">watch in KM PLAYER</button>
+                    <button class="magnet" onclick="s_player()"><img src="https://i.postimg.cc/XYJr6NGg/s.png"
+                            alt="">watch in S PLAYER</button>
+                    <button class="magnet" onclick="hd_player()"><img src="https://i.postimg.cc/rFT43LNh/hd.png"
+                            alt="">watch in HD
+                        PLAYER(4K)</button>
+                    <button class="magnet" onclick="bisalDownload()"><img style="height: 35px;"
+                            src="https://i.postimg.cc/Zncc9YLq/Pngtree-download-icon-3581467.png" alt="">download video
+                    </button>
+                </div>
+            </div>            
+        </div>
+    </div>
+        <footer>
+            <center>
+                <div class="copyright">
+                    <h5 class="text-center">Copyright © 2024 <a href="https://t.me/SilentXBotz"><span
+                                style="font-weight: 700;">SilentXBotz</span></a>. All
+                        Rights Reserved.</h5>
+                </div>
+            </center>
+        </footer>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.155.0/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/automat/controlkit.js@master/bin/controlKit.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sheryjs/dist/Shery.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const uncopyableElement = document.querySelector(".uncopyable");
+
+        uncopyableElement.addEventListener("selectstart", function (event) {
+            event.preventDefault();
+        });
+    });
+</script>
+<script src="js/wow.min.js"></script>
+<script>
+    new WOW().init();
+</script>
+<script src="https://cdn.plyr.io/3.6.9/plyr.js"></script>
+<script src="https://biisal.github.io/Resources/StreamJs.js"></script>
+<script src="script.js"></script>
+</html>
