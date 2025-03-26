@@ -68,8 +68,8 @@ Run The Following Commands To Deploy The Bot On A **VPS**:
 
 ```bash
 mkdir SilentXBotz && cd SilentXBotz
-git clone https://github.com/YourRepo/Autofilter-Bot
-cd Autofilter-Bot
+git clone https://github.com/NBBotz/Auto_Filter_Bot
+cd Auto_Filter_Bot
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
