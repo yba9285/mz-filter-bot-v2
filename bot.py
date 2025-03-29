@@ -21,6 +21,9 @@ from Lucia.Bot import SilentX
 from Lucia.util.keepalive import ping_server
 from Lucia.Bot.clients import initialize_clients
 import pyrogram.utils
+from PIL import Image
+
+Image.MAX_IMAGE_PIXELS = 500_000_000
 
 logging.config.fileConfig('logging.conf')
 logging.getLogger().setLevel(logging.INFO)
