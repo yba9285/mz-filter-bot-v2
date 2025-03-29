@@ -14,6 +14,10 @@ from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 processed_movies = set()
 
+MONGODB_SIZE = 512
+MONGODB_MINIMUM_REMAINING = 80 
+MONGODB_SIZE_LIMIT = MONGODB_SIZE - MONGODB_MINIMUM_REMAINING 
+
 client = AsyncIOMotorClient(DATABASE_URI)
 db = client[DATABASE_NAME]
 instance = Instance.from_db(db)
@@ -50,10 +54,17 @@ class Media2(Document):
         collection_name = COLLECTION_NAME
 
 async def check_db_size(db):
-    stats = await db.command("dbstats")
-    db_size = stats["dataSize"] 
-    return db_size
-          
+    try:
+        stats = await db.command("dbstats")
+        db_size = stats["dataSize"]
+        db_size_mb = db_size / (1024 * 1024)
+        print(f"📊 DB Size: {db_size_mb:.2f} MB")
+        return db_size_mb
+    except Exception as e:
+        print(f"Error Checking Database Size: {e}")
+        return 0 
+
+         
 async def save_file(bot, media):
     try:
         global saveMedia
@@ -61,12 +72,11 @@ async def save_file(bot, media):
         file_name = re.sub(r"(_|\-|\.|\+)", " ", str(media.file_name))
         if await Media.count_documents({'file_id': file_id}, limit=1):
             print(f'{file_name} is already saved in the primary database!')
-            return False, 0            
-        DB_SIZE_LIMIT = 80 * 1024 * 1024  # 80MB
+            return False, 0 
         if MULTIPLE_DB:
             try:
                 primary_db_size = await check_db_size(db)
-                if primary_db_size >= DB_SIZE_LIMIT:
+                if primary_db_size >= MONGODB_SIZE_LIMIT:
                     print("Primary Database Is Running Low On Space. Switching To Second Database.")
                     saveMedia = Media2
                 else:
@@ -97,8 +107,8 @@ async def save_file(bot, media):
                 return False, 0
             else:             
                 print(f'{getattr(media, "file_name", "NO_FILE")} is saved to database')
-                if await get_status(bot.me.id):
-                    await send_msg(bot, file.file_name, file.caption)
+#                if await get_status(bot.me.id):
+#                    await send_msg(bot, file.file_name, file.caption)
                 return True, 1
     except Exception as e:
         print(f"Error In Save File - {e}")
@@ -281,9 +291,3 @@ async def get_qualities(text, qualities: list):
             quality.append(q)
     quality = ", ".join(quality)
     return quality[:-2] if quality.endswith(", ") else quality
-
-
-
-
-
-
