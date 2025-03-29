@@ -624,6 +624,7 @@ async def seasons_check(bot, query):
         search = FRESH.get(key)        
         if seasons != "homepage":
             search = f"{search} {seasons}"
+        BUTTONS[key] = search
         req = query.from_user.id
         chat_id = query.message.chat.id
         message = query.message
