@@ -77,6 +77,16 @@ python3 bot.py
 ```
 </details>
 
+
+# ! Errors 
+- This Repository May Contain Some Errors. If You Encounter Any Issues, Please Let Us Know, And We Will Do Our Best To Resolve Them.
+<p align="center">
+  <a href="https://t.me/SilentXBotz_Support">
+    <img src="https://img.shields.io/badge/Report-Error-red?style=for-the-badge&logo=telegram" alt="Report Error">
+  </a>
+</p>
+  
+
 # 📌 Credits  
 
 - **Base Repository:** [Dreamcinezone](https://github.com/MrRaazz/Dreamcinezone.git)  
