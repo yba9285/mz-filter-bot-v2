@@ -107,8 +107,6 @@ async def save_file(bot, media):
                 return False, 0
             else:             
                 print(f'{getattr(media, "file_name", "NO_FILE")} is saved to database')
-#                if await get_status(bot.me.id):
-#                    await send_msg(bot, file.file_name, file.caption)
                 return True, 1
     except Exception as e:
         print(f"Error In Save File - {e}")
@@ -231,63 +229,3 @@ def unpack_new_file_id(new_file_id):
     )
     file_ref = encode_file_ref(decoded.file_reference)
     return file_id, file_ref
-
-
-async def send_msg(bot, filename, caption): 
-    try:
-        filename = re.sub(r'\(\@\S+\)|\[\@\S+\]|\b@\S+|\bwww\.\S+', '', filename).strip()
-        caption = re.sub(r'\(\@\S+\)|\[\@\S+\]|\b@\S+|\bwww\.\S+', '', caption).strip()        
-        year_match = re.search(r"\b(19|20)\d{2}\b", caption)
-        if year_match:
-            year = year_match.group(0)
-        else:
-            year = None             
-        pattern = r"(?i)(?:s|season)0*(\d{1,2})"
-        season = re.search(pattern, caption)
-        if not season:
-            season = re.search(pattern, filename)        
-        if year:
-            filename = filename[: filename.find(year) + 4]            
-        if not year:   
-          if season:
-            season = season.group(1) if season else None 
-            filename = filename[: filename.find(season) +1 ]                    
-        qualities = ["ORG", "WEB-DL", "WEBRip", "Web-Dl", "WEB-RIP", "WebRip", "Web-Rip", "WEB-Rip", "org", "hdcam", "HDCAM", "HQ", "hq", "HDRip", "hdrip", "camrip", "CAMRip", "hdtc", "predvd", "DVDscr", "dvdscr", "dvdrip", "dvdscr", "HDTC", "dvdscreen", "HDTS", "hdts"]
-        quality = await get_qualities(caption, qualities) or ""
-        language = ""
-        possible_languages = CAPTION_LANGUAGES 
-        for lang in possible_languages:
-            if lang.lower() in caption.lower():
-                language += f"{lang}, "
-        if not language:
-            language = ""
-        else:
-            language = language[:-2] 
-        filename = re.sub(r"[\(\)\[\]\{\}:;'\-!]", "", filename)
-        caption_messages = "<b>#New_File_Uploded\n\nName - {}\nLanguage- {}\nQuality - {}</b>"
-        caption_message = caption_messages.format(filename, language, quality) # For Quality Option Added - quality 
-        if filename in processed_movies:
-            return
-        processed_movies.add(filename)
-        imdb = await get_movie_details(filename)
-        resized_poster = None
-        if imdb:
-            poster_url = imdb.get('poster_url')
-            if poster_url:
-                resized_poster = await fetch_image(poster_url)            
-        filenames = filename.replace(" ", '-')
-        btn = [[InlineKeyboardButton('𝖲𝖾𝖺𝗋𝖼𝗁 𝖧𝖾𝗋𝖾', url=f"https://telegram.me/{temp.U_NAME}?start=getfile-{filenames}")]]
-        if resized_poster:
-            await bot.send_photo(chat_id=MOVIE_UPDATE_CHANNEL, photo=resized_poster, caption=caption_message, reply_markup=InlineKeyboardMarkup(btn))
-        else:      
-            await bot.send_message(chat_id=MOVIE_UPDATE_CHANNEL, text=caption_message, reply_markup=InlineKeyboardMarkup(btn))
-    except Exception as e:
-        print(f"Error Sending Movie Update - {e}")
-        
-async def get_qualities(text, qualities: list):
-    quality = []
-    for q in qualities:
-        if q in text:
-            quality.append(q)
-    quality = ", ".join(quality)
-    return quality[:-2] if quality.endswith(", ") else quality
