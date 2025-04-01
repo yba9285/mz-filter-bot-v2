@@ -8,9 +8,11 @@ from umongo import Instance, Document, fields
 from motor.motor_asyncio import AsyncIOMotorClient
 from marshmallow.exceptions import ValidationError
 from info import *
-from utils import get_settings, save_group_settings, temp, get_status
-from .Imdbposter import get_movie_details, fetch_image
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from utils import get_settings, save_group_settings
+
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 processed_movies = set()
 
@@ -71,13 +73,13 @@ async def save_file(bot, media):
         file_id, file_ref = unpack_new_file_id(media.file_id)
         file_name = re.sub(r"(_|\-|\.|\+)", " ", str(media.file_name))
         if await Media.count_documents({'file_id': file_id}, limit=1):
-            print(f'{file_name} is already saved in the primary database!')
+            logger.warning(f'{file_name} is already saved in primary database!')
             return False, 0 
         if MULTIPLE_DB:
             try:
                 primary_db_size = await check_db_size(db)
                 if primary_db_size >= MONGODB_SIZE_LIMIT:
-                    print("Primary Database Is Running Low On Space. Switching To Second Database.")
+                    logger.warning("Primary Database Is Running Low On Space. Switching To Second Database.")
                     saveMedia = Media2
                 else:
                     saveMedia = Media
@@ -97,16 +99,16 @@ async def save_file(bot, media):
                 caption=media.caption.html if media.caption else None,
             )
         except ValidationError as e:
-            print(f'Error Occurred While Saving File In Database - {e}')
+            logger.exception(f'Error Occurred While Saving File In Database - {e}')
             return False, 2
         else:
             try:
                 await file.commit()
             except DuplicateKeyError:
-                print(f'{getattr(media, "file_name", "NO_FILE")} is already saved in database')   
+                logger.warning(f'{getattr(media, "file_name", "NO_FILE")} is already saved in database')   
                 return False, 0
             else:             
-                print(f'{getattr(media, "file_name", "NO_FILE")} is saved to database')
+                logger.info(f'{getattr(media, "file_name", "NO_FILE")} is saved to database')
                 return True, 1
     except Exception as e:
         print(f"Error In Save File - {e}")
@@ -178,10 +180,10 @@ async def get_bad_files(query, file_type=None):
         filter = {'file_name': regex}
     if file_type:
         filter['file_type'] = file_type
-    cursor1 = Media.find(search_filter).sort('$natural', -1)
+    cursor1 = Media.find(filter).sort('$natural', -1)
     files1 = await cursor1.to_list(length=(await Media.count_documents(filter)))
     if MULTIPLE_DB:
-        cursor2 = Media2.find(search_filter).sort('$natural', -1)
+        cursor2 = Media2.find(filter).sort('$natural', -1)
         files2 = await cursor2.to_list(length=(await Media2.count_documents(filter)))
         files = files1 + files2
     else:
