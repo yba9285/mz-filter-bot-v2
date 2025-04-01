@@ -16,7 +16,7 @@ from database.users_chats_db import db
 from info import *
 from utils import temp
 from Script import script
-from plugins import web_server, check_expired_premium
+from plugins import web_server, check_expired_premium, keep_alive 
 from Lucia.Bot import SilentX
 from Lucia.util.keepalive import ping_server
 from Lucia.Bot.clients import initialize_clients
@@ -88,6 +88,7 @@ async def SilentXBotz_start():
     await app.setup()
     bind_address = "0.0.0.0"
     await web.TCPSite(app, bind_address, PORT).start()
+    SilentX.loop.create_task(keep_alive())
     await idle()
     
 if __name__ == '__main__':
