@@ -559,7 +559,8 @@ async def filter_languages_cb_handler(client: Client, query: CallbackQuery):
         await query.answer()
     except Exception as e:
         print(f"Error In Language - {e}")
-@Client.on_callback_query(filters.regex(r"^season#"))
+        
+@Client.on_callback_query(filters.regex(r"^seasons#"))
 async def season_cb_handler(client: Client, query: CallbackQuery):
     try:
         try:
