@@ -52,10 +52,7 @@ SPELL_CHECK = {}
 @Client.on_message(filters.group & filters.text & filters.incoming)
 async def give_filter(client, message):
     if EMOJI_MODE:
-        try:
-            await message.react(emoji=random.choice(REACTIONS), big=True)
-        except:
-            pass
+        await message.react(emoji=random.choice(REACTIONS), big=True)
     await silentdb.update_top_messages(message.from_user.id, message.text)
     if message.chat.id != SUPPORT_CHAT_ID:
         manual = await manual_filters(client, message)
@@ -80,7 +77,7 @@ async def pm_text(bot, message):
     user_id = message.from_user.id
     if EMOJI_MODE:
         await message.react(emoji=random.choice(REACTIONS), big=True)
-    if content.startswith(("/", "#", ".")):
+    if content.startswith(("/", "#")):
         return  
     try:
         await silentdb.update_top_messages(user_id, content)
@@ -562,9 +559,8 @@ async def filter_languages_cb_handler(client: Client, query: CallbackQuery):
         await query.answer()
     except Exception as e:
         print(f"Error In Language - {e}")
-
-@Client.on_callback_query(filters.regex(r"^seasons#"))
-async def select_seasons(bot, query):
+@Client.on_callback_query(filters.regex(r"^season#"))
+async def season_cb_handler(client: Client, query: CallbackQuery):
     try:
         try:
             if int(query.from_user.id) not in [query.message.reply_to_message.from_user.id, 0]:
@@ -575,44 +571,53 @@ async def select_seasons(bot, query):
         except:
             pass
         _, key, offset = query.data.split("#")
+        search = FRESH.get(key)
+        search = search.replace(' ', '_')
         offset = int(offset)
-        curr_time = datetime.now(pytz.timezone('Asia/Kolkata')).time()    
-        btn = [[
-             InlineKeyboardButton("⇊ ꜱᴇʟᴇᴄᴛ ꜱᴇᴀꜱᴏɴ ⇊", callback_data=f"fs#{key}#{offset}#unknown")
-        ],[
-            InlineKeyboardButton("Sᴇᴀꜱᴏɴ 𝟷", callback_data=f"fs#{key}#{offset}#s01"),
-            InlineKeyboardButton("Sᴇᴀꜱᴏɴ 𝟸", callback_data=f"fs#{key}#{offset}#s02")
-        ],[
-            InlineKeyboardButton("Sᴇᴀꜱᴏɴ 𝟹", callback_data=f"fs#{key}#{offset}#s03"),
-            InlineKeyboardButton("Sᴇᴀꜱᴏɴ 𝟺", callback_data=f"fs#{key}#{offset}#s04")
-        ],[
-            InlineKeyboardButton("Sᴇᴀꜱᴏɴ 𝟻", callback_data=f"fs#{key}#{offset}#s05"),
-            InlineKeyboardButton("Sᴇᴀꜱᴏɴ 𝟼", callback_data=f"fs#{key}#{offset}#s06")
-        ],[
-            InlineKeyboardButton("Sᴇᴀꜱᴏɴ 𝟽", callback_data=f"fs#{key}#{offset}#s07"),
-            InlineKeyboardButton("Sᴇᴀꜱᴏɴ 𝟾", callback_data=f"fs#{key}#{offset}#s08")
-        ],[
-            InlineKeyboardButton("Sᴇᴀꜱᴏɴ 𝟿", callback_data=f"fs#{key}#{offset}#s09"),
-            InlineKeyboardButton("Sᴇᴀꜱᴏɴ 𝟷𝟶", callback_data=f"fs#{key}#{offset}#s10")
-        ],[
-            InlineKeyboardButton("↭ ʙᴀᴄᴋ ᴛᴏ ꜰɪʟᴇs ↭", callback_data=f"fs#{key}#{offset}#homepage")
-        ]]
-        try:
-           await query.edit_message_reply_markup(
-               reply_markup=InlineKeyboardMarkup(btn)
-           )
-        except MessageNotModified:
-            pass
-        await query.answer()
+        btn = []
+        for i in range(0, len(SEASONS)-1, 2):
+            btn.append([
+                InlineKeyboardButton(
+                    text=SEASONS[i].title(),
+                    callback_data=f"fs#{SEASONS[i].lower()}#{key}#{offset}"
+                ),
+                InlineKeyboardButton(
+                    text=SEASONS[i+1].title(),
+                    callback_data=f"fs#{SEASONS[i+1].lower()}#{key}#{offset}"
+                ),
+            ])
+        btn.insert(
+            0,
+            [
+                InlineKeyboardButton(
+                    text="⇊ ꜱᴇʟᴇᴄᴛ ʟᴀɴɢᴜᴀɢᴇ ⇊", callback_data="ident"
+                )
+            ],
+        )
+        req = query.from_user.id
+        offset = 0
+        btn.append([InlineKeyboardButton(text="↭ ʙᴀᴄᴋ ᴛᴏ ꜰɪʟᴇs ↭", callback_data=f"fl#homepage#{key}#{offset}")])
+        await query.edit_message_reply_markup(InlineKeyboardMarkup(btn))
     except Exception as e:
-        print(f"Error In Season Callback Handler - {e}")
+        print(f"Error In Season Cb Handaler - {e}")
+
 
 @Client.on_callback_query(filters.regex(r"^fs#"))
-async def seasons_check(bot, query):
+async def filter_season_cb_handler(client: Client, query: CallbackQuery):
     try:
-        curr_time = datetime.now(pytz.timezone('Asia/Kolkata')).time()
-        _, key, offset, seasons = query.data.split("#")
+        _, seas, key, offset = query.data.split("#")
         offset = int(offset)
+        curr_time = datetime.now(pytz.timezone('Asia/Kolkata')).time()
+        search = FRESH.get(key)
+        search = search.replace("_", " ")
+        baal = seas in search
+        if baal:
+            search = search.replace(seas, "")
+        else:
+            search = search
+        req = query.from_user.id
+        chat_id = query.message.chat.id
+        message = query.message
         try:
             if int(query.from_user.id) not in [query.message.reply_to_message.from_user.id, 0]:
                 return await query.answer(
@@ -621,20 +626,13 @@ async def seasons_check(bot, query):
                 )
         except:
             pass
-        if seasons == "unknown":
-            return await query.answer("Sᴇʟᴇᴄᴛ ᴀɴʏ Sᴇᴀꜱᴏɴꜱ ғʀᴏᴍ ᴛʜᴇ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴs !", show_alert=True)
-        search = FRESH.get(key)        
-        if seasons != "homepage":
-            search = f"{search} {seasons}"
+        if seas != "homepage":
+            search = f"{search} {seas}"
         BUTTONS[key] = search
-        req = query.from_user.id
-        chat_id = query.message.chat.id
-        message = query.message
         files, n_offset, total_results = await get_search_results(chat_id, search, offset=offset, filter=True)
         if not files:
             await query.answer("🚫 ɴᴏ ꜰɪʟᴇꜱ ᴡᴇʀᴇ ꜰᴏᴜɴᴅ 🚫", show_alert=1)
             return
-        settings = await get_settings(query.message.chat.id)
         temp.GETALL[key] = files
         settings = await get_settings(message.chat.id)
         if settings["button"]:
@@ -655,7 +653,7 @@ async def seasons_check(bot, query):
             )
             btn.insert(1, [
                 InlineKeyboardButton("📥 Sᴇɴᴅ Aʟʟ 📥", callback_data=f"sendfiles#{key}")
-            
+
             ])
         else:
             btn = []
@@ -675,7 +673,7 @@ async def seasons_check(bot, query):
                     btn.append(
                         [InlineKeyboardButton("ᴘᴀɢᴇ", callback_data="pages"), InlineKeyboardButton(text=f"1/{math.ceil(int(total_results)/10)}",callback_data="pages"), InlineKeyboardButton(text="ɴᴇxᴛ ⋟",callback_data=f"next_{req}_{key}_{n_offset}")]
                     )
-    
+
                 else:
                     btn.append(
                         [InlineKeyboardButton("ᴘᴀɢᴇ", callback_data="pages"), InlineKeyboardButton(text=f"1/{math.ceil(int(total_results)/int(MAX_B_TN))}",callback_data="pages"), InlineKeyboardButton(text="ɴᴇxᴛ ⋟",callback_data=f"next_{req}_{key}_{n_offset}")]
@@ -690,6 +688,7 @@ async def seasons_check(bot, query):
             btn.append(
                 [InlineKeyboardButton(text="↭ ɴᴏ ᴍᴏʀᴇ ᴘᴀɢᴇꜱ ᴀᴠᴀɪʟᴀʙʟᴇ ↭",callback_data="pages")]
             )    
+
         if not settings["button"]:
             cur_time = datetime.now(pytz.timezone('Asia/Kolkata')).time()
             time_difference = timedelta(hours=cur_time.hour, minutes=cur_time.minute, seconds=(cur_time.second+(cur_time.microsecond/1000000))) - timedelta(hours=curr_time.hour, minutes=curr_time.minute, seconds=(curr_time.second+(curr_time.microsecond/1000000)))
@@ -709,7 +708,6 @@ async def seasons_check(bot, query):
         await query.answer()
     except Exception as e:
         print(f"Error In Season - {e}")
-
 
 @Client.on_callback_query(filters.regex(r"^spol"))
 async def advantage_spoll_choker(bot, query):
