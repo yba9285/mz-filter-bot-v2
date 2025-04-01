@@ -560,7 +560,6 @@ async def filter_languages_cb_handler(client: Client, query: CallbackQuery):
     except Exception as e:
         print(f"Error In Language - {e}")
 
-
 @Client.on_callback_query(filters.regex(r"^seasons#"))
 async def select_seasons(bot, query):
     try:
@@ -707,7 +706,8 @@ async def seasons_check(bot, query):
         await query.answer()
     except Exception as e:
         print(f"Error In Season - {e}")
-                                           
+
+
 @Client.on_callback_query(filters.regex(r"^spol"))
 async def advantage_spoll_choker(bot, query):
     _, id, user = query.data.split('#')
