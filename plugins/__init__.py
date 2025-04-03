@@ -7,7 +7,6 @@ from database.users_chats_db import db
 from info import LOG_CHANNEL, URL
 import aiohttp
 import asyncio
-
 import logging
 
 logging.basicConfig(level=logging.INFO)
@@ -37,13 +36,16 @@ async def check_expired_premium(client):
         await sleep(1)
 
 async def keep_alive():
-    """Keep bot alive by sending periodic pings."""
+    """Keep Bot Alive By Sending Periodic Pings In Every 2 Minutes."""
     async with aiohttp.ClientSession() as session:
         while True:
-            await asyncio.sleep(298)
+            await asyncio.sleep(120)
             try:
                 async with session.get(URL) as resp:
                     if resp.status != 200:
                         logging.warning(f"⚠️ Ping Error! Status: {resp.status}")
+                    else:
+                        logging.info("✅ Ping Successful")
             except Exception as e:
                 logging.error(f"❌ Ping Failed: {e}")   
+
