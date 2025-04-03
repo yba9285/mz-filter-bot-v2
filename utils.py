@@ -49,7 +49,6 @@ class temp(object):
     B_LINK = None
     GETALL = {}
     SHORT = {}
-    SETTINGS = {}
     IMDB_CAP = {}
     VERIFICATIONS = {}
 
@@ -201,16 +200,12 @@ async def get_shortlink(link, grp_id, is_second_shortener=False, is_third_shorte
     return link
 
 async def get_settings(group_id):
-    settings = temp.SETTINGS.get(group_id)
-    if not settings:
-        settings = await db.get_settings(group_id)
-        temp.SETTINGS[group_id] = settings
+    settings = await db.get_settings(int(group_id))
     return settings
     
 async def save_group_settings(group_id, key, value):
     current = await get_settings(group_id)
     current[key] = value
-    temp.SETTINGS[group_id] = current
     await db.update_settings(group_id, current)
     
 def get_size(size):
