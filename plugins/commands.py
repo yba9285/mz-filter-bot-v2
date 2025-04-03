@@ -14,7 +14,7 @@ from database.refer import referdb
 from database.topdb import silentdb
 from pyrogram.enums import ParseMode, ChatType
 from pyrogram import Client, filters, enums
-from pyrogram.errors import FloodWait
+from pyrogram.errors import FloodWait, ChatAdminRequired
 from pyrogram.types import *
 from database.ia_filterdb import Media, Media2, get_file_details, unpack_new_file_id, get_bad_files
 from database.users_chats_db import db
