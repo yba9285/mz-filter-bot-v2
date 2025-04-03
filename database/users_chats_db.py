@@ -145,9 +145,10 @@ class Database:
             'fsub_id': AUTH_CHANNEL
         }
         chat = await self.grp.find_one({'id':int(id)})
-        if chat:
-            return chat.get('settings', default)
-        return default
+        if chat and 'settings' in chat:
+            return chat['settings']
+        else:
+            return default.copy()
     
     async def disable_chat(self, chat, reason="No Reason"):
         chat_status=dict(
