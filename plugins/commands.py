@@ -208,6 +208,7 @@ async def start(client, message):
                 )
                 return
     except Exception as n:
+        await log_error(client, f"Got Error In Force Subscription Funtion.\n\n Error - {n}")
         print(f"Error In Fsub :- {n}")
 
     user_id = m.from_user.id
@@ -251,6 +252,7 @@ async def start(client, message):
                 await m.delete()
                 return
         except Exception as e:
+            await log_error(client, f"Got Error In Verification Funtion.\n\n Error - {e}")
             print(f"Error In Verification - {e}")
             await message.reply_text(f"Something Want Wrong ! Message Here - @SilentXBotz_Support")
 
