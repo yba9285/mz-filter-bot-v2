@@ -217,6 +217,31 @@ def get_size(size):
         size /= 1024.0
     return "%.2f %s" % (size, units[i])
 
+def silent_size(size):
+    size = float(size)
+    size_gb = size / (1024 ** 3)
+    return "%.2f GB" % size_gb
+                        
+def extract_tag(file_name: str) -> str:
+    file_name = file_name.lower()
+    ep_match = re.search(r's(?:eason)?\s*(\d{1,2})\s*e(?:pisode)?\s*(\d{1,2})', file_name)
+    if not ep_match:
+        ep_match = re.search(r'\b(\d{1,2})\s*e(?:pisode)?\s*(\d{1,2})', file_name)
+    if not ep_match:
+        ep_match = re.search(r's(\d{1,2})e(\d{1,2})', file_name)
+    if ep_match:
+        season = int(ep_match.group(1))
+        episode = int(ep_match.group(2))
+        return f"S{season:02d}E{episode:02d} •"
+    season_match = re.search(r'(?:season|s)\s*0*(\d{1,2})', file_name)
+    if season_match:
+        season = int(season_match.group(1))
+        return f"S{season:02d} •"
+    quality_match = re.search(r'\b(480p|720p|1080p|2160p|4k|360p)\b', file_name)
+    if quality_match:
+        return f"{quality_match.group(1)} •"
+    return ""
+
 def split_list(l, n):
     for i in range(0, len(l), n):
         yield l[i:i + n]  
