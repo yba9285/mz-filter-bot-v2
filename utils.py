@@ -224,20 +224,23 @@ def silent_size(size):
                         
 def extract_tag(file_name: str) -> str:
     file_name = file_name.lower()
-    ep_match = re.search(r's(?:eason)?\s*(\d{1,2})\s*e(?:pisode)?\s*(\d{1,2})', file_name)
-    if not ep_match:
-        ep_match = re.search(r'\b(\d{1,2})\s*e(?:pisode)?\s*(\d{1,2})', file_name)
-    if not ep_match:
-        ep_match = re.search(r's(\d{1,2})e(\d{1,2})', file_name)
-    if ep_match:
-        season = int(ep_match.group(1))
-        episode = int(ep_match.group(2))
-        return f"S{season:02d}E{episode:02d} •"
-    season_match = re.search(r'(?:season|s)\s*0*(\d{1,2})', file_name)
+    file_name = re.sub(r'[\._\-]+', ' ', file_name)
+    patterns = [
+        r'\b(?:s|season)\s*0*(\d{1,2})\s*(?:e|episode)\s*0*(\d{1,2})\b',
+        r'\b(\d{1,2})\s*(?:x|episode)\s*0*(\d{1,2})\b',
+        r'\bs0*(\d{1,2})e0*(\d{1,2})\b',
+    ]
+    for pattern in patterns:
+        match = re.search(pattern, file_name)
+        if match:
+            season = int(match.group(1))
+            episode = int(match.group(2))
+            return f"S{season:02d}E{episode:02d} •"
+    season_match = re.search(r'\b(?:s|season)\s*0*(\d{1,2})\b', file_name)
     if season_match:
         season = int(season_match.group(1))
         return f"S{season:02d} •"
-    quality_match = re.search(r'\b(480p|720p|1080p|2160p|4k|360p)\b', file_name)
+    quality_match = re.search(r'\b(2160p|1080p|720p|480p|360p|4k)\b', file_name)
     if quality_match:
         return f"{quality_match.group(1)} •"
     return ""
