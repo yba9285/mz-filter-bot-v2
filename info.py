@@ -51,7 +51,7 @@ DATABASE_URI2 = environ.get('DATABASE_URI2', "")
 GRP_LNK = environ.get('GRP_LNK', 'https://t.me/moviesonerequest')
 CHNL_LNK = environ.get('CHNL_LNK', 'https://t.me/mzmoviiez')
 OWNER_LNK = environ.get('OWNER_LNK', 'https://t.me/aonemarathi')
-UPDATE_CHANNEL_LNK = environ.get('UPDATE_CHANNEL_LNK', 'https://t.me/')
+UPDATE_CHANNEL_LNK = environ.get('UPDATE_CHANNEL_LNK', 'https://t.me/MzBotz')
 
 #Force Subscription Channel (Put Same Channel Id In Both Veriables)
 AUTH_CHANNEL = int(environ.get('AUTH_CHANNEL', '-1001520014377')) 
