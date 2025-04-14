@@ -15,8 +15,8 @@
       "index",
       "inline"
     ],
-    "website": "https://github.com/NBBotz/mz-filter-bot-v2",
-    "repository": "https://github.com/NBBotz/mz-filter-bot-v2",
+    "website": "https://github.com/yba9285/mz-filter-bot-v2",
+    "repository": "https://github.com/yba9285/mz-filter-bot-v2",
     "env": {
         "BOT_TOKEN": {
             "description": "Your bot token.",
