@@ -67,13 +67,13 @@ TUTORIAL_2 = environ.get("TUTORIAL_2", "https://t.me/howtoopenlinks/")
 TUTORIAL_3 = environ.get("TUTORIAL_3", "https://t.me/howtoopenlinks/")
 
 # Verification (Must Fill All Veriables. Else You Got Error
-SHORTENER_API = environ.get("SHORTENER_API", "")
+SHORTENER_API = environ.get("SHORTENER_API", "3b623c80e2c2534a5eae0bae35777c4c1aedd154")
 SHORTENER_WEBSITE = environ.get("SHORTENER_WEBSITE", "shortlinks.com")
 
-SHORTENER_API2 = environ.get("SHORTENER_API2", "")
+SHORTENER_API2 = environ.get("SHORTENER_API2", "41ff6d51799b604c63f6cfe75eb5b7a58794a850")
 SHORTENER_WEBSITE2 = environ.get("SHORTENER_WEBSITE2", "papajiurl.com")
 
-SHORTENER_API3 = environ.get("SHORTENER_API3", "")
+SHORTENER_API3 = environ.get("SHORTENER_API3", "f0b67e13bda5380f9b4d252b3c82092ec456966e")
 SHORTENER_WEBSITE3 = environ.get("SHORTENER_WEBSITE3", "inshorturl.com")
 
 TWO_VERIFY_GAP = int(environ.get('TWO_VERIFY_GAP', "14400"))
